@@ -104,13 +104,21 @@
 
 ```mermaid
 graph TD
-    A[model] --> B[exception]
-    A --> C[infrastructure]
-    C --> D[service]
-    A --> [repository_jdbc]
-    C --> [repository_jdbc]
-    D --> E[api]
-    E --> F[application]
+    A[model]
+    B[exception]
+    C[infrastructure]
+    D[service]
+    E[api]
+    F[application]
+    R[repository_jdbc]
+
+    A --> B
+    A --> C
+    C --> D
+    A --> R
+    C --> R
+    D --> E
+    E --> F
 ```
 
 **규칙**:
