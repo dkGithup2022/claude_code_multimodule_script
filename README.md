@@ -230,12 +230,16 @@ graph LR
   app --> api
   app --> model
 
-  infra --> api
   infra --> model
 
-  repo --> api
+  repo --> infra
   repo --> model
 
+  service --> infra
+  service --> model 
+  
+  api --> service
+  api --> model
 
 ```
 
