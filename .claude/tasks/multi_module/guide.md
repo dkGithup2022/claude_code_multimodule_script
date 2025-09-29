@@ -107,8 +107,9 @@ graph TD
     A[model] --> B[exception]
     A --> C[infrastructure]
     C --> D[service]
-    B --> D
-    D --> E[repository/api]
+    A --> [repository_jdbc]
+    C --> [repository_jdbc]
+    D --> E[api]
     E --> F[application]
 ```
 
