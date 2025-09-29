@@ -11,8 +11,8 @@ include(":modules:service")
 include(":modules:infrastructure")
 include(":modules:repository-jdbc")
 include(":modules:api")
-// include(":modules:application-api")
-// include(":modules:schema")
+include(":modules:application-api")
+include(":modules:schema")
 
 pluginManagement {
     buildscript {

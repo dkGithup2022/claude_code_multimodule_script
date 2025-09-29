@@ -23,7 +23,7 @@ public class ExampleApiController {
 
     @GetMapping("/{exampleId}")
     public ExampleResponse getExample(@PathVariable Long exampleId) {
-        var example = exampleReader.findById(new ExampleIdentity(exampleId));
+        var example = exampleReader.findByIdentity(new ExampleIdentity(exampleId));
         return ExampleResponse.from(example);
     }
 

@@ -1,6 +1,6 @@
 package com.example.hello.api.example.dto;
 
-import com.example.hello.model.example.ExampleModel;
+import com.example.hello.model.example.Example;
 import lombok.Value;
 
 import java.time.Instant;
@@ -12,7 +12,7 @@ public class ExampleResponse {
     Instant createdAt;
     Instant updatedAt;
 
-    public static ExampleResponse from(ExampleModel example) {
+    public static ExampleResponse from(Example example) {
         return new ExampleResponse(
                 example.getExampleId(),
                 example.getName(),

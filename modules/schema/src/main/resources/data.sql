@@ -1,0 +1,9 @@
+/*
+ * Copyright 2024 searchkim Inc. - All Rights Reserved.
+ */
+
+-- Example 초기 테스트 데이터
+INSERT INTO EXAMPLES (NAME, CREATED_AT, UPDATED_AT) VALUES
+('Example One', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Example Two', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Example Three', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
