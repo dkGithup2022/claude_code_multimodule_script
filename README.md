@@ -236,11 +236,7 @@ graph LR
   repo --> api
   repo --> model
 
-  api --> ex
-  model --> ex
-  app --> ex
-  infra --> ex
-  repo --> ex
+
 ```
 
 ### 2.3 의존 규칙 요약

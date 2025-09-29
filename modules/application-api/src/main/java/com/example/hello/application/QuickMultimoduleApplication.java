@@ -18,7 +18,7 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 @EnableJdbcRepositories(
         basePackages = {
                 "com.example.hello.jdbc",       // JDBC Repository 스캔
-                "com.example.hello.repository"  // 추가 Repository 패키지
+                "com.example.hello.infrastructure"  // 추가 Repository 패키지
         }
 )
 public class QuickMultimoduleApplication {
