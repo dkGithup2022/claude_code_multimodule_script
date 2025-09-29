@@ -95,7 +95,7 @@ subprojects {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
         testImplementation("org.junit.jupiter:junit-jupiter")
-        testImplementation("org.mockito:mockito-core")
+        testImplementation("org.mockito:mockito-junit-jupiter")
         testImplementation("org.assertj:assertj-core")
     }
 

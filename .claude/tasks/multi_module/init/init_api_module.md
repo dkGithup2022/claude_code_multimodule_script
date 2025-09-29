@@ -58,9 +58,9 @@ dependencies {
 
 #### 4-2. ExampleResponse.java
 ```java
-package ${감지된패키지명}.example.dto;
+package ${감지된패키지명}.api.example.dto;
 
-import ${감지된패키지명}.example.ExampleModel;
+import ${감지된패키지명}.model.example.ExampleModel;
 import lombok.Value;
 
 import java.time.Instant;
@@ -85,11 +85,11 @@ public class ExampleResponse {
 
 #### 4-3. ExampleApiController.java
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.api.example;
 
-import ${감지된패키지명}.example.ExampleLookUpService;
-import ${감지된패키지명}.example.ExampleIdentity;
-import ${감지된패키지명}.example.dto.ExampleResponse;
+import ${감지된패키지명}.service.example.ExampleReader;
+import ${감지된패키지명}.model.example.ExampleIdentity;
+import ${감지된패키지명}.api.example.dto.ExampleResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -127,7 +127,7 @@ public class ExampleApiController {
 
 #### 4-6. GlobalExceptionHandler.java
 ```java
-package ${감지된패키지명}.config;
+package ${감지된패키지명}.api.config;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -148,14 +148,20 @@ public class GlobalExceptionHandler {
 
 #### 4-7. ApiAutoConfiguration.java
 ```java
-package ${감지된패키지명}.config;
+package ${감지된패키지명}.api.config;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * API Auto Configuration
+ *
+ * API 모듈의 자동 설정을 담당합니다.
+ * 컴포넌트 스캔은 Application 모듈에서 중앙 관리되므로
+ * 여기서는 별도의 스캔 설정을 하지 않습니다.
+ */
 @AutoConfiguration
-@ComponentScan(basePackages = "${감지된패키지명}")
 public class ApiAutoConfiguration {
+    // 스캔 설정 제거 - Application 모듈에서 중앙 관리
 }
 ```
 

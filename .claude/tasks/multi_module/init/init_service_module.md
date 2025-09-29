@@ -47,10 +47,10 @@ dependencies {
 
 #### 4-2. ExampleReader.java (조회 인터페이스)
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.service.example;
 
-import ${감지된패키지명}.example.Example;
-import ${감지된패키지명}.example.ExampleIdentity;
+import ${감지된패키지명}.model.example.Example;
+import ${감지된패키지명}.model.example.ExampleIdentity;
 
 import java.util.List;
 
@@ -80,10 +80,10 @@ public interface ExampleReader {
 
 #### 4-3. ExampleWriter.java (변경 인터페이스)
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.service.example;
 
-import ${감지된패키지명}.example.Example;
-import ${감지된패키지명}.example.ExampleIdentity;
+import ${감지된패키지명}.model.example.Example;
+import ${감지된패키지명}.model.example.ExampleIdentity;
 
 /**
  * Example 도메인 변경 서비스 인터페이스
@@ -111,12 +111,12 @@ public interface ExampleWriter {
 
 #### 4-4. DefaultExampleReader.java (조회 구현체)
 ```java
-package ${감지된패키지명}.example.impl;
+package ${감지된패키지명}.service.example.impl;
 
-import ${감지된패키지명}.example.Example;
-import ${감지된패키지명}.example.ExampleIdentity;
-import ${감지된패키지명}.example.ExampleReader;
-import ${감지된패키지명}.example.repository.ExampleRepository;
+import ${감지된패키지명}.model.example.Example;
+import ${감지된패키지명}.model.example.ExampleIdentity;
+import ${감지된패키지명}.service.example.ExampleReader;
+import ${감지된패키지명}.infrastructure.example.repository.ExampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -153,12 +153,12 @@ public class DefaultExampleReader implements ExampleReader {
 
 #### 4-5. DefaultExampleWriter.java (변경 구현체)
 ```java
-package ${감지된패키지명}.example.impl;
+package ${감지된패키지명}.service.example.impl;
 
-import ${감지된패키지명}.example.Example;
-import ${감지된패키지명}.example.ExampleIdentity;
-import ${감지된패키지명}.example.ExampleWriter;
-import ${감지된패키지명}.example.repository.ExampleRepository;
+import ${감지된패키지명}.model.example.Example;
+import ${감지된패키지명}.model.example.ExampleIdentity;
+import ${감지된패키지명}.service.example.ExampleWriter;
+import ${감지된패키지명}.infrastructure.example.repository.ExampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

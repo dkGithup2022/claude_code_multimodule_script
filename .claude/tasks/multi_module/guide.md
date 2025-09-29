@@ -61,15 +61,17 @@
 | `init_multimodule_project.md` | 새 멀티모듈 프로젝트 생성 | 프로젝트명, 루트모듈명, 패키지명 |
 
 ### 모듈별 초기화 스크립트 (빈 프로젝트용)
-| 스크립트 | 용도 | 대화형 | 비고 |
-|---------|------|--------|------|
-| `init_model_module.md` | Model 모듈 초기화 | ❌ | Example 도메인 포함 |
-| `init_exception_module.md` | Exception 모듈 초기화 | ❌ | ExampleNotFoundException 포함 |
-| `init_infrastructure_module.md` | Infrastructure 모듈 초기화 | ❌ | ExampleRepository 인터페이스 |
-| `init_service_module.md` | Service 모듈 초기화 | ❌ | ExampleLookUpService |
-| `init_repository_jdbc_module.md` | Repository-JDBC 모듈 초기화 | ❌ | JDBC 구현체들 |
-| `init_api_module.md` | API 모듈 초기화 | ❌ | REST API + DTO들 |
-| `init_application_api_module.md` | Application 모듈 초기화 | ❌ | Spring Boot 메인 클래스 |
+| 스크립트                                      | 용도                     | 대화형 | 비고 |
+|-------------------------------------------|------------------------|--------|------|
+| `init_model_module.md`                    | Model 모듈 초기화           | ❌ | Example 도메인 포함 |
+| `init_exception_module.md`                | Exception 모듈 초기화       | ❌ | ExampleNotFoundException 포함 |
+| `init_infrastructure_module.md`           | Infrastructure 모듈 초기화  | ❌ | ExampleRepository 인터페이스 |
+| `init_service_module.md`                  | Service 모듈 초기화         | ❌ | ExampleLookUpService |
+| `init_repository_jdbc_module.md`          | Repository-JDBC 모듈 초기화 | ❌ | JDBC 구현체들 |
+| `init_api_module.md`                      | API 모듈 초기화             | ❌ | REST API + DTO들 |
+| `init_application_api_module.md`          | Application 모듈 초기화     | ❌ | Spring Boot 메인 클래스 |
+| `run add_schema_module.md  도메인명: example` | ddl , 초기 데이터 생성        | ❌ |  |
+
 
 ### 도메인 코드 추가 스크립트 (기존 프로젝트용)
 | 스크립트 | 용도 | 대화형 | 2-depth 지원 | 생성 파일 수 |

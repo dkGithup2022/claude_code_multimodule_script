@@ -4,7 +4,7 @@
 
 ### 1단계: 새 멀티모듈 프로젝트 생성
 ```bash
-"init_multimodule_project.md 실행해줘. 프로젝트명: my-app, 루트모듈: core, 패키지: com.mycompany"
+" run init_multimodule_project.md . 프로젝트명: my-app, 루트모듈: core, 패키지: com.mycompany"
 ```
 
 **필수 파라미터**:

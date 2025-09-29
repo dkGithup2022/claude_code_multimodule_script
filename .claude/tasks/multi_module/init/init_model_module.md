@@ -57,7 +57,7 @@ dependencies {
 
 #### 4-2. AuditProps.java
 ```java
-package ${감지된패키지명};
+package ${감지된패키지명}.model;
 
 import java.time.Instant;
 
@@ -69,7 +69,7 @@ public interface AuditProps {
 
 #### 4-3. ExampleIdentity.java
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.model.example;
 
 import lombok.Value;
 
@@ -81,7 +81,7 @@ public class ExampleIdentity {
 
 #### 4-4. ExampleModel.java
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.model.example;
 
 import ${감지된패키지명}.AuditProps;
 
@@ -93,7 +93,7 @@ public interface ExampleModel extends AuditProps {
 
 #### 4-5. Example.java
 ```java
-package ${감지된패키지명}.example;
+package ${감지된패키지명}.model.example;
 
 import lombok.Value;
 import java.time.Instant;

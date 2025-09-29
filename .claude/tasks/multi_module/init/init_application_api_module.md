@@ -66,8 +66,24 @@ package ${감지된패키지명}.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
+/**
+ * Multi-Module Spring Boot Application
+ *
+ * 헥사고날 아키텍처의 Entry Point로서 모든 필요한 모듈들의
+ * 컴포넌트 스캔을 중앙에서 관리합니다.
+ */
 @SpringBootApplication
+@ComponentScan(basePackages = {
+    "${감지된패키지명}.application",    // Application 모듈
+    "${감지된패키지명}.api",            // API 모듈 (Controllers, DTOs)
+    "${감지된패키지명}.service",        // Service 모듈 (Business Logic)
+    "${감지된패키지명}.jdbc",           // JDBC 모듈 (Repository 구현체)
+    "${감지된패키지명}.config"          // Auto Configuration 클래스들
+})
+@EnableJdbcRepositories(basePackages = "${감지된패키지명}.jdbc")
 public class ${루트모듈대문자}Application {
 
     public static void main(String[] args) {

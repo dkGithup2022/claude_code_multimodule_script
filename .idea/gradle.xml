@@ -8,6 +8,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules" />
+            <option value="$PROJECT_DIR$/modules/api" />
+            <option value="$PROJECT_DIR$/modules/application-api" />
+            <option value="$PROJECT_DIR$/modules/exception" />
+            <option value="$PROJECT_DIR$/modules/infrastructure" />
+            <option value="$PROJECT_DIR$/modules/model" />
+            <option value="$PROJECT_DIR$/modules/repository-jdbc" />
+            <option value="$PROJECT_DIR$/modules/schema" />
+            <option value="$PROJECT_DIR$/modules/service" />
           </set>
         </option>
       </GradleProjectSettings>

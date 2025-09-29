@@ -58,10 +58,10 @@ dependencies {
 
 #### 5-2. ${선택된엔티티명}Repository.java (동적 생성)
 ```java
-package ${감지된패키지명}.${선택된엔티티소문자}.repository;
+package ${감지된패키지명}.infrastructure.${선택된엔티티소문자}.repository;
 
-import ${감지된패키지명}.${선택된엔티티소문자}.${선택된엔티티명};
-import ${감지된패키지명}.${선택된엔티티소문자}.${선택된엔티티명}Identity;
+import ${감지된패키지명}.model.${선택된엔티티소문자}.${선택된엔티티명};
+import ${감지된패키지명}.model.${선택된엔티티소문자}.${선택된엔티티명}Identity;
 import java.util.List;
 import java.util.Optional;
 
