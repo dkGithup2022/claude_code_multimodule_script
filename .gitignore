@@ -148,7 +148,7 @@ gradle-app.setting
 
 # Eclipse
 .settings/
-bin/
+**/bin/
 
 # VS Code
 .vscode/

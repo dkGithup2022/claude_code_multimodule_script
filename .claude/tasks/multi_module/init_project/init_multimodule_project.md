@@ -72,19 +72,30 @@ version = "1.0-SNAPSHOT"
 allprojects {
     group = "${패키지}"
     version = "1.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-subprojects {
+val javaProjects = listOf(
+    project(":${루트모듈}:model"),
+    project(":${루트모듈}:exception"),
+    project(":${루트모듈}:service"),
+    project(":${루트모듈}:infrastructure"),
+    project(":${루트모듈}:repository-jdbc"),
+    project(":${루트모듈}:api"),
+    project(":${루트모듈}:application-api"),
+    project(":${루트모듈}:schema")
+)
+
+configure(javaProjects) {
     apply(plugin = "java")
     apply(plugin = "java-library")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    repositories {
-        mavenCentral()
     }
 
     dependencies {
@@ -136,7 +147,7 @@ out/
 .classpath
 .project
 .settings/
-bin/
+**/bin/
 
 # VS Code
 .vscode/

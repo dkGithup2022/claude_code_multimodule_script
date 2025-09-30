@@ -2,7 +2,7 @@
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
--- Examples 테이블 생성 (H2용 - 대문자 테이블명 사용)
+-- Example 테이블 생성 (H2용 - 대문자 테이블명 사용)
 CREATE TABLE IF NOT EXISTS EXAMPLES (
     EXAMPLE_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
     NAME VARCHAR(255) NOT NULL,

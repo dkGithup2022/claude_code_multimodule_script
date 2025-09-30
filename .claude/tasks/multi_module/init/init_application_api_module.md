@@ -24,7 +24,9 @@ ${감지된루트모듈}/
     └── src/main/
         ├── java/${감지된패키지경로}/application/
         │   ├── ${루트모듈대문자}Application.java
-        │   └── config/SpringDocConfiguration.java
+        │   └── config/
+        │       ├── ModuleScanConfig.java
+        │       └── SpringDocConfiguration.java
         └── resources/
             └── application.yml
 ```
@@ -44,6 +46,7 @@ dependencies {
     implementation(project(":${감지된루트모듈}:api"))
     implementation(project(":${감지된루트모듈}:service"))
     implementation(project(":${감지된루트모듈}:repository-jdbc"))
+    implementation(project(":${감지된루트모듈}:schema"))  // DDL/DML 스크립트
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
@@ -66,24 +69,15 @@ package ${감지된패키지명}.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 /**
  * Multi-Module Spring Boot Application
  *
- * 헥사고날 아키텍처의 Entry Point로서 모든 필요한 모듈들의
- * 컴포넌트 스캔을 중앙에서 관리합니다.
+ * 컴포넌트 스캔 설정은 application.config.ModuleScanConfig에서 중앙 관리됩니다.
  */
-@SpringBootApplication
-@ComponentScan(basePackages = {
-    "${감지된패키지명}.application",    // Application 모듈
-    "${감지된패키지명}.api",            // API 모듈 (Controllers, DTOs)
-    "${감지된패키지명}.service",        // Service 모듈 (Business Logic)
-    "${감지된패키지명}.jdbc",           // JDBC 모듈 (Repository 구현체)
-    "${감지된패키지명}.config"          // Auto Configuration 클래스들
-})
-@EnableJdbcRepositories(basePackages = "${감지된패키지명}.jdbc")
+@SpringBootApplication(
+    scanBasePackages = "${감지된패키지명}.application.config"
+)
 public class ${루트모듈대문자}Application {
 
     public static void main(String[] args) {
@@ -92,7 +86,35 @@ public class ${루트모듈대문자}Application {
 }
 ```
 
-#### 4-3. SpringDocConfiguration.java
+#### 4-3. ModuleScanConfig.java
+```java
+package ${감지된패키지명}.application.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+
+/**
+ * Module Scan Configuration
+ *
+ * 멀티모듈 프로젝트의 컴포넌트 스캔 범위를 중앙에서 관리합니다.
+ *
+ * @ComponentScan: 일반 컴포넌트(@Component, @Service 등) 스캔
+ * @EnableJdbcRepositories: Spring Data JDBC Repository 인터페이스 스캔 및 구현체 자동 생성
+ */
+@Configuration
+@ComponentScan(basePackages = {
+    "${감지된패키지명}.api",
+    "${감지된패키지명}.service",
+    "${감지된패키지명}.infrastructure",
+    "${감지된패키지명}.jdbc"  // JDBC 구현체 클래스 스캔
+})
+@EnableJdbcRepositories(basePackages = "${감지된패키지명}.jdbc")  // CrudRepository 인터페이스 스캔
+public class ModuleScanConfig {
+}
+```
+
+#### 4-4. SpringDocConfiguration.java
 ```java
 package ${감지된패키지명}.application.config;
 
@@ -115,7 +137,7 @@ public class SpringDocConfiguration {
 }
 ```
 
-#### 4-4. application.yml
+#### 4-5. application.yml
 ```yaml
 spring:
   application:
@@ -134,7 +156,7 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: embedded
 
   jpa:
     show-sql: true

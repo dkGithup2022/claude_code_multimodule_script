@@ -2,17 +2,17 @@
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
-rootProject.name = "quick-multimodule"
+rootProject.name = "my-projec"
 
 // 향후 모듈들이 여기에 추가됩니다
 include(":modules:model")
 include(":modules:exception")
-include(":modules:service")
 include(":modules:infrastructure")
+include(":modules:service")
 include(":modules:repository-jdbc")
 include(":modules:api")
-include(":modules:application-api")
 include(":modules:schema")
+include(":modules:application-api")
 
 pluginManagement {
     buildscript {

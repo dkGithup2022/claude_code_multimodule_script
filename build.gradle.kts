@@ -8,25 +8,36 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4" apply false
 }
 
-group = "com.example.hello"
+group = "io.multi.hello"
 version = "1.0-SNAPSHOT"
 
 allprojects {
-    group = "com.example.hello"
+    group = "io.multi.hello"
     version = "1.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-subprojects {
+val javaProjects = listOf(
+    project(":modules:model"),
+    project(":modules:exception"),
+    project(":modules:service"),
+    project(":modules:infrastructure"),
+    project(":modules:repository-jdbc"),
+    project(":modules:api"),
+    project(":modules:application-api"),
+    project(":modules:schema")
+)
+
+configure(javaProjects) {
     apply(plugin = "java")
     apply(plugin = "java-library")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    repositories {
-        mavenCentral()
     }
 
     dependencies {

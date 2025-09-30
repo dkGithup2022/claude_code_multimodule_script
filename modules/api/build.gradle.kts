@@ -5,14 +5,12 @@
 apply(plugin = "org.springframework.boot")
 apply(plugin = "io.spring.dependency-management")
 
-// 라이브러리 모듈이므로 bootJar 대신 jar 사용
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     enabled = false
 }
 
 tasks.named<Jar>("jar") {
     enabled = true
-    archiveClassifier = ""
 }
 
 dependencies {

@@ -1,6 +1,17 @@
 # Multi-Module 헥사고날 아키텍처 가이드
 
+## 선행 작업 
+- mcp 등록 
+```sh
+claude mcp add serena -- \
+  uvx --from git+https://github.com/oraios/serena \
+  serena start-mcp-server \
+  --context ide-assistant \
+  --project "$(pwd)"
+```
+
 ## 멀티 모듈 구조 및 역할
+
 
 ### 1. model
 **역할**: 순수 도메인 모델 (가장 내부 계층)
