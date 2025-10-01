@@ -2,6 +2,10 @@
 
 > 본 문서는 **Claude Code** 환경에서 사용되는 멀티모듈 스캐폴딩 태스크(.claude/tasks/multi_module)의 목적, 사용법, 생성되는 모듈 구조를 정의합니다. 레포지토리/팀 컨벤션에 맞춰 필요한 항목을 채워 넣으세요.
 
+> 해당 도구를 사용한 프로젝트 목록
+
+- url-shortener : [url-shortener 브랜치](https://github.com/dkGithup2022/claude_code_multimodule_script/tree/url-shortener)
+
 ---
 
 ## 0. Claude Code Script 설명
