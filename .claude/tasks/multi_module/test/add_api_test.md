@@ -1,4 +1,4 @@
-# API Module 테스트 생성 스크립트 (MockMvc + Reader/Writer Mock)
+# API Module 테스트 생성 스크립트 (Standalone MockMvc + Mockito)
 
 ## 사용법
 ```bash
@@ -63,22 +63,30 @@ Foo.java 스펙:
 
 ## 생성되는 테스트 구조
 
-### API 테스트 클래스 템플릿
+### API 테스트 클래스 템플릿 (Standalone MockMvc)
 ```java
-@WebMvcTest(${입력받은클래스명}.class)
+@ExtendWith(MockitoExtension.class)
 class ${입력받은클래스명}Test {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private ${도메인명}Reader ${도메인명소문자}Reader;
 
-    @MockBean
+    @Mock
     private ${도메인명}Writer ${도메인명소문자}Writer;
 
-    @Autowired
+    @InjectMocks
+    private ${입력받은클래스명} ${입력받은클래스명소문자};
+
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(${입력받은클래스명소문자}).build();
+        objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules(); // JavaTimeModule 등록
+    }
 
     // 탐색된 Model 스펙 기반 테스트 데이터
     private final ${도메인명} sample${도메인명} = new ${도메인명}(
@@ -90,11 +98,6 @@ class ${입력받은클래스명}Test {
 
     // 필수 테스트 메서드들 (Controller 메서드 기반)
     ${필수_테스트_메서드들}
-
-    // Helper 메서드
-    private ${도메인명} createMock${도메인명}(Long id, ${비즈니스_필드들}) {
-        return new ${도메인명}(id, ${필드값들}, Instant.now(), Instant.now());
-    }
 }
 ```
 
@@ -106,7 +109,7 @@ class ${입력받은클래스명}Test {
 
 // GET /api/foos/{id} - ID 조회
 @Test void getFooById_existingId_returnsOkWithFoo() throws Exception
-@Test void getFooById_nonExistingId_returnsNotFound() throws Exception
+@Test void getFooById_nonExistingId_throwsException() throws Exception
 
 // GET /api/foos/search?name=xxx - 검색
 @Test void getFoosByName_existingName_returnsOkWithList() throws Exception
@@ -118,23 +121,23 @@ class ${입력받은클래스명}Test {
 
 // PUT /api/foos/{id} - 수정
 @Test void updateFoo_existingId_returnsOkWithUpdatedFoo() throws Exception
-@Test void updateFoo_nonExistingId_returnsNotFound() throws Exception
+@Test void updateFoo_nonExistingId_throwsException() throws Exception
 
 // DELETE /api/foos/{id} - 삭제
 @Test void deleteFoo_existingId_returnsNoContent() throws Exception
-@Test void deleteFoo_nonExistingId_returnsNotFound() throws Exception
 ```
 
 ### 테스트 메서드 예시 (Status + Spec 동시 검증)
 ```java
+// GET 성공 케이스
 @Test
 void getFooById_existingId_returnsOkWithFoo() throws Exception {
     // given
-    when(fooReader.findByIdentity(testIdentity))
-        .thenReturn(sampleFoo);
+    when(fooReader.findById(testIdentity))
+        .thenReturn(Optional.of(sampleFoo));
 
     // when & then - Status Code 검증
-    MvcResult result = mockMvc.perform(get("/api/foos/{id}", 1L))
+    MvcResult result = mockMvc.perform(get("/api/v1/foos/{id}", 1L))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -142,24 +145,43 @@ void getFooById_existingId_returnsOkWithFoo() throws Exception {
     String responseJson = result.getResponse().getContentAsString();
     FooResponse response = objectMapper.readValue(responseJson, FooResponse.class);
 
-    assertThat(response.getFooId()).isEqualTo(1L);
-    assertThat(response.getName()).isEqualTo("testName");
-    assertThat(response.getCreatedAt()).isNotNull();
-    assertThat(response.getUpdatedAt()).isNotNull();
+    assertThat(response.fooId()).isEqualTo(1L);
+    assertThat(response.name()).isEqualTo("testName");
+    assertThat(response.createdAt()).isNotNull();
+    assertThat(response.updatedAt()).isNotNull();
 
-    verify(fooReader).findByIdentity(testIdentity);
+    verify(fooReader).findById(testIdentity);
 }
 
+// GET 실패 케이스 (RuntimeException 처리)
+@Test
+void getFooById_nonExistingId_throwsException() throws Exception {
+    // given
+    when(fooReader.findById(new FooIdentity(999L)))
+        .thenReturn(Optional.empty());
+
+    // when & then
+    try {
+        mockMvc.perform(get("/api/v1/foos/{id}", 999L))
+            .andExpect(status().is5xxServerError());
+    } catch (Exception e) {
+        // Controller에서 RuntimeException 발생 예상
+        assertThat(e.getCause()).isInstanceOf(RuntimeException.class);
+    }
+
+    verify(fooReader).findById(new FooIdentity(999L));
+}
+
+// POST 성공 케이스
 @Test
 void createFoo_validRequest_returnsCreatedWithFoo() throws Exception {
     // given
-    FooCreateRequest request = new FooCreateRequest();
-    request.setName("newFoo");
+    CreateFooRequest request = new CreateFooRequest("test@example.com", "testName");
 
     when(fooWriter.upsert(any(Foo.class))).thenReturn(sampleFoo);
 
     // when & then - Status Code 검증
-    MvcResult result = mockMvc.perform(post("/api/foos")
+    MvcResult result = mockMvc.perform(post("/api/v1/foos")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
@@ -169,13 +191,28 @@ void createFoo_validRequest_returnsCreatedWithFoo() throws Exception {
     String responseJson = result.getResponse().getContentAsString();
     FooResponse response = objectMapper.readValue(responseJson, FooResponse.class);
 
-    assertThat(response.getFooId()).isEqualTo(1L);
-    assertThat(response.getName()).isEqualTo("testName");
+    assertThat(response.fooId()).isEqualTo(1L);
+    assertThat(response.name()).isEqualTo("testName");
 
     verify(fooWriter).upsert(argThat(foo ->
         foo.getFooId() == null &&
-        foo.getName().equals("newFoo")
+        foo.getName().equals("testName")
     ));
+}
+
+// POST 실패 케이스 (Validation)
+@Test
+void createFoo_invalidRequest_returnsBadRequest() throws Exception {
+    // given - 빈 이름
+    CreateFooRequest request = new CreateFooRequest("", "testName");
+
+    // when & then
+    mockMvc.perform(post("/api/v1/foos")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest());
+
+    verify(fooWriter, never()).upsert(any());
 }
 ```
 
@@ -247,8 +284,8 @@ verify(fooWriter).upsert(argThat(foo ->
 
 📁 파일: ${루트모듈}/api/src/test/java/${패키지}/${입력받은클래스명}Test.java
 📋 테스트: ${API_테스트_개수}개 (Status Code + Response Spec 동시 검증)
-🔧 MockMvc 테스트: @WebMvcTest + @MockBean Reader/Writer
-💡 2-depth 도메인: ${도메인명} 지원
+🔧 MockMvc 테스트: Standalone Setup + @Mock Reader/Writer
+💡 현대적 스타일: Spring Context 없는 빠른 단위 테스트
 
 🚀 다음 단계:
    1. 다른 API Controller 테스트: "add_api_test.md 실행해줘"
@@ -256,9 +293,11 @@ verify(fooWriter).upsert(argThat(foo ->
 ```
 
 ## 주요 특징
-- **MockMvc 기반 웹 계층 테스트** - 실제 HTTP 요청/응답 시뮬레이션
-- **Reader/Writer Mock** - Service 의존성 Mock 처리
+- **Standalone MockMvc** - Spring Context 없이 빠른 단위 테스트
+- **Mockito 기반** - @Mock, @InjectMocks로 의존성 주입
+- **JavaTimeModule 자동 등록** - Instant 등 Java Time API 직렬화 지원
+- **RuntimeException 처리** - try-catch로 Controller 예외 검증
 - **Status Code + Response Spec 동시 검증** - 하나의 테스트에서 두 가지 모두 확인
 - **2-depth 도메인 지원** - ProductCategory, OrderItem 등 복합 도메인명
 - **DTO 기반 검증** - Request/Response DTO 자동 탐색 및 활용
-- **JSON 직렬화/역직렬화** - ObjectMapper 활용한 실제 JSON 처리 테스트
+- **현대적인 테스트 스타일** - 빠르고 격리된 단위 테스트
