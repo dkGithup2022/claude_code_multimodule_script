@@ -23,4 +23,5 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-autoconfigure-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("com.h2database:h2")
 }

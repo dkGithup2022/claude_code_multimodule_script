@@ -1,4 +1,4 @@
-package io.multi.hello.exception;
+package io.multi.hello.exception.example;
 
 public class ExampleNotFoundException extends RuntimeException {
 
