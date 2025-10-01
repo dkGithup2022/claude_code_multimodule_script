@@ -1,5 +1,8 @@
 # URL Shortener Project
 
+
+클로드 스크립트 정리 : https://github.com/dkGithup2022/claude_code_multimodule_script
+
 > 멀티모듈 아키텍처 기반의 URL 단축 서비스
 
 ---
