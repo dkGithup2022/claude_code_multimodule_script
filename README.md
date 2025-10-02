@@ -6,6 +6,9 @@
 
 - url-shortener : [url-shortener 브랜치](https://github.com/dkGithup2022/claude_code_multimodule_script/tree/url-shortener)
 
+- 쿠폰 발행 프로젝트 : [쿠폰발행 프로젝트](https://github.com/dkGithup2022/claude_code_multimodule_script/tree/coupon_issue)
+
+
 ---
 
 ## 0. Claude Code Script 설명
