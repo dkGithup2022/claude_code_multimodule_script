@@ -8,11 +8,11 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4" apply false
 }
 
-group = "io.multi.hello"
+group = "io.example.coupon"
 version = "1.0-SNAPSHOT"
 
 allprojects {
-    group = "io.multi.hello"
+    group = "io.example.coupon"
     version = "1.0-SNAPSHOT"
 
     repositories {
@@ -21,19 +21,26 @@ allprojects {
 }
 
 val javaProjects = listOf(
-    project(":modules:model"),
-    project(":modules:exception"),
-    project(":modules:service"),
-    project(":modules:infrastructure"),
-    project(":modules:repository-jdbc"),
-    project(":modules:api"),
-    project(":modules:application-api"),
-    project(":modules:schema")
+    ":modules:model",
+    ":modules:exception",
+    ":modules:service",
+    ":modules:infrastructure",
+    ":modules:repository-jdbc",
+    ":modules:api",
+    ":modules:application-api",
+    ":modules:schema"
 )
 
-configure(javaProjects) {
+configure(subprojects.filter { javaProjects.contains(it.path) }) {
     apply(plugin = "java")
     apply(plugin = "java-library")
+    apply(plugin = "io.spring.dependency-management")
+
+    configure<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension> {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:3.2.0")
+        }
+    }
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21

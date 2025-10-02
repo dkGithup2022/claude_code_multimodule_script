@@ -2,25 +2,15 @@
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
-apply(plugin = "org.springframework.boot")
-apply(plugin = "io.spring.dependency-management")
-
-tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-    enabled = false
-}
-
-tasks.named<Jar>("jar") {
-    enabled = true
-}
-
 dependencies {
     implementation(project(":modules:model"))
-    implementation(project(":modules:exception"))
     implementation(project(":modules:infrastructure"))
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter")
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure-processor")
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc:3.2.0")
+    implementation("org.springframework:spring-context:6.1.1")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Test dependencies
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.2.0")
+    testImplementation("com.h2database:h2:2.2.224")
+    testRuntimeOnly("com.h2database:h2:2.2.224")
 }
