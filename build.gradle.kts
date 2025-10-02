@@ -8,11 +8,11 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4" apply false
 }
 
-group = "io.multi.hello"
+group = "io.example.hello"
 version = "1.0-SNAPSHOT"
 
 allprojects {
-    group = "io.multi.hello"
+    group = "io.example.hello"
     version = "1.0-SNAPSHOT"
 
     repositories {
@@ -20,18 +20,8 @@ allprojects {
     }
 }
 
-val javaProjects = listOf(
-    project(":modules:model"),
-    project(":modules:exception"),
-    project(":modules:service"),
-    project(":modules:infrastructure"),
-    project(":modules:repository-jdbc"),
-    project(":modules:api"),
-    project(":modules:application-api"),
-    project(":modules:schema")
-)
-
-configure(javaProjects) {
+// 모듈들이 생성되면서 자동으로 추가됩니다
+configure(subprojects.filter { it.path.startsWith(":modules:") }) {
     apply(plugin = "java")
     apply(plugin = "java-library")
 

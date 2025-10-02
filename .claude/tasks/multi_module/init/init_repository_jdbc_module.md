@@ -22,15 +22,11 @@ ${감지된루트모듈}/
 └── repository-jdbc/
     ├── build.gradle.kts
     └── src/main/
-        ├── java/${감지된패키지경로}/
-        │   ├── config/
-        │   │   └── JdbcRepositoryAutoConfiguration.java
-        │   └── example/repository/
-        │       ├── ExampleEntity.java
-        │       ├── ExampleEntityRepository.java
-        │       └── ExampleJdbcRepository.java
-        └── resources/META-INF/spring/
-            └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └── java/${감지된패키지경로}/
+            └── example/repository/
+                ├── ExampleEntity.java
+                ├── ExampleEntityRepository.java
+                └── ExampleJdbcRepository.java
 ```
 
 ### 4. 파일 생성
@@ -50,35 +46,12 @@ dependencies {
     implementation(project(":${감지된루트모듈}:infrastructure"))
 
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter")
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 ```
 
-#### 4-2. JdbcRepositoryAutoConfiguration.java
-```java
-package ${감지된패키지명}.jdbc.config;
-
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-
-/**
- * JDBC Repository Auto Configuration
- *
- * JDBC Repository 모듈의 자동 설정을 담당합니다.
- * 컴포넌트 스캔과 Repository 활성화는 Application 모듈에서 중앙 관리되므로
- * 여기서는 별도의 스캔 설정을 하지 않습니다.
- *
- * 이 설정 클래스는 단순히 "JDBC 모듈이 존재함"을 알리는 역할만 합니다.
- */
-@AutoConfiguration
-public class JdbcRepositoryAutoConfiguration {
-    // 모든 스캔 설정 제거 - Application 모듈에서 중앙 관리
-}
-```
-
-#### 4-3. ExampleEntity.java
+#### 4-2. ExampleEntity.java
 ```java
 package ${감지된패키지명}.jdbc.example.repository;
 
@@ -103,6 +76,10 @@ public class ExampleEntity {
     private String name;
     private Instant createdAt;
     private Instant updatedAt;
+
+    public static ExampleEntity newOne(String name) {
+        return new ExampleEntity(null, name, Instant.now(), Instant.now());
+    }
 }
 ```
 
@@ -220,11 +197,6 @@ public class ExampleJdbcRepository implements ExampleRepository {
 }
 ```
 
-#### 4-6. AutoConfiguration.imports
-```
-${감지된패키지명}.jdbc.config.JdbcRepositoryAutoConfiguration
-```
-
 ### 5. 검증
 - `./gradlew :${감지된루트모듈}:repository-jdbc:build` 실행하여 컴파일 확인
 - 생성된 파일 구조 출력
@@ -235,32 +207,17 @@ modules/
 └── repository-jdbc/
     ├── build.gradle.kts
     └── src/main/
-        ├── java/io/dkGithup2022/hello/
-        │   ├── config/
-        │   │   └── JdbcRepositoryAutoConfiguration.java
-        │   └── example/repository/
-        │       ├── ExampleEntity.java
-        │       ├── ExampleEntityRepository.java
-        │       └── ExampleJdbcRepository.java
-        └── resources/META-INF/spring/
-            └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └── java/io/dkGithup2022/hello/
+            └── example/repository/
+                ├── ExampleEntity.java
+                ├── ExampleEntityRepository.java
+                └── ExampleJdbcRepository.java
 ```
 
 ## 주요 특징
 - **Spring Data JDBC** 사용
 - **별도 EntityRepository 인터페이스** - Inner interface 문제 해결
-- **Auto Configuration** - 헥사고날 아키텍처 준수
 - **Entity-Domain** 변환 로직
 - **Repository Pattern** 구현
 - **@RequiredArgsConstructor** 사용으로 코드 간소화
-
-## 🔧 **기존 버전과의 차이점**
-### ❌ 기존 문제점:
-1. **Inner Interface**: Spring Data JDBC가 스캔하지 못함
-2. **잘못된 AutoConfiguration**: Repository 구현체를 직접 등록
-3. **아키텍처 위반**: Application 모듈에서 JDBC 직접 참조 필요
-
-### ✅ 수정된 버전:
-1. **별도 EntityRepository**: Spring Data JDBC가 정상 스캔
-2. **올바른 AutoConfiguration**: 설정 클래스만 등록
-3. **헥사고날 아키텍처**: Application은 runtimeOnly 의존성만 사용
+- **컴포넌트 스캔**: Application 모듈의 ModuleScanConfig에서 중앙 관리

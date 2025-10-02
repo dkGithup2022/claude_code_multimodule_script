@@ -104,6 +104,10 @@ public class Example implements ExampleModel {
     String name;
     Instant createdAt;
     Instant updatedAt;
+
+    public static Example newOne(String name) {
+        return new Example(null, name, Instant.now(), Instant.now());
+    }
 }
 ```
 

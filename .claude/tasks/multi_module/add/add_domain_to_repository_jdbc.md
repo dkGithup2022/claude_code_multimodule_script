@@ -165,6 +165,10 @@ public class ${엔티티클래스명}Entity {
 
     // Model 클래스에서 추출한 필드들 (ID 필드 제외, Instant 그대로 사용)
     ${Model클래스의_필드들_매핑}
+
+    public static ${엔티티클래스명}Entity newOne(${비즈니스_필드_파라미터들}) {
+        return new ${엔티티클래스명}Entity(null, ${비즈니스_필드들}, Instant.now(), Instant.now());
+    }
 }
 ```
 
@@ -190,6 +194,10 @@ public class ${엔티티클래스명}Entity {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
+
+    public static ${엔티티클래스명}Entity newOne(String name, String description) {
+        return new ${엔티티클래스명}Entity(null, name, description, Instant.now(), Instant.now());
+    }
 }
 ```
 

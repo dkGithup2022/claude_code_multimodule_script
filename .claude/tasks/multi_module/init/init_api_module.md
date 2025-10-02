@@ -22,15 +22,12 @@ ${감지된루트모듈}/
 └── api/
     ├── build.gradle.kts
     └── src/main/
-        ├── java/${감지된패키지경로}/
-        │   ├── example/
-        │   │   ├── ExampleApiController.java
-        │   │   └── dto/ExampleResponse.java
-        │   └── config/
-        │       ├── GlobalExceptionHandler.java
-        │       └── ApiAutoConfiguration.java
-        └── resources/META-INF/spring/
-            └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └── java/${감지된패키지경로}/
+            ├── example/
+            │   ├── ExampleApiController.java
+            │   └── dto/ExampleResponse.java
+            └── config/
+                └── GlobalExceptionHandler.java
 ```
 
 ### 4. 파일 생성
@@ -49,8 +46,6 @@ dependencies {
     implementation(project(":${감지된루트모듈}:service"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter")
-    compileOnly("org.springframework.boot:spring-boot-autoconfigure-processor")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -125,7 +120,7 @@ public class ExampleApiController {
 ```
 
 
-#### 4-6. GlobalExceptionHandler.java
+#### 4-4. GlobalExceptionHandler.java
 ```java
 package ${감지된패키지명}.api.config;
 
@@ -146,30 +141,6 @@ public class GlobalExceptionHandler {
 }
 ```
 
-#### 4-7. ApiAutoConfiguration.java
-```java
-package ${감지된패키지명}.api.config;
-
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-
-/**
- * API Auto Configuration
- *
- * API 모듈의 자동 설정을 담당합니다.
- * 컴포넌트 스캔은 Application 모듈에서 중앙 관리되므로
- * 여기서는 별도의 스캔 설정을 하지 않습니다.
- */
-@AutoConfiguration
-public class ApiAutoConfiguration {
-    // 스캔 설정 제거 - Application 모듈에서 중앙 관리
-}
-```
-
-#### 4-8. AutoConfiguration.imports
-```
-${감지된패키지명}.config.ApiAutoConfiguration
-```
-
 ### 5. 검증
 - `./gradlew :${감지된루트모듈}:api:build` 실행하여 컴파일 확인
 - 생성된 파일 구조 출력
@@ -180,15 +151,12 @@ corehr/
 └── api/
     ├── build.gradle.kts
     └── src/main/
-        ├── java/com/searchkim/
-        │   ├── example/
-        │   │   ├── ExampleApiController.java
-        │   │   └── dto/ExampleResponse.java
-        │   └── config/
-        │       ├── GlobalExceptionHandler.java
-        │       └── ApiAutoConfiguration.java
-        └── resources/META-INF/spring/
-            └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+        └── java/com/searchkim/
+            ├── example/
+            │   ├── ExampleApiController.java
+            │   └── dto/ExampleResponse.java
+            └── config/
+                └── GlobalExceptionHandler.java
 ```
 
 ## 주요 특징
@@ -196,4 +164,4 @@ corehr/
 - **DTO 패턴** 적용
 - **Service Layer** 연동
 - **Global Exception Handler** 내장 (RuntimeException → 404/500 자동 변환)
-- **Auto Configuration** 지원
+- **컴포넌트 스캔**: Application 모듈의 ModuleScanConfig에서 중앙 관리

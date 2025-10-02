@@ -2,9 +2,9 @@
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
-rootProject.name = "my-projec"
+rootProject.name = "quick-multimodule"
 
-// 향후 모듈들이 여기에 추가됩니다
+// 모듈들
 include(":modules:model")
 include(":modules:exception")
 include(":modules:infrastructure")

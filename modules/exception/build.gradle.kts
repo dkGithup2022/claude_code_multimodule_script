@@ -3,5 +3,5 @@
  */
 
 dependencies {
-    implementation(project(":modules:model"))
+    // Exception module has no external dependencies
 }

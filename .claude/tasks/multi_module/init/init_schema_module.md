@@ -44,13 +44,49 @@ ${감지된루트모듈}/
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
--- Examples 테이블 생성 (H2용 - 대문자 테이블명 사용)
-CREATE TABLE IF NOT EXISTS EXAMPLES (
-    EXAMPLE_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-    NAME VARCHAR(255) NOT NULL,
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ========================================
+-- 테이블명 및 컬럼명 규칙
+-- ========================================
+-- 테이블명: 소문자 + 복수형 (예: users, orders, products)
+-- 컬럼명: 스네이크케이스 소문자 (예: user_id, created_at)
+-- 이유:
+--   - Spring Data JDBC 기본 네이밍 전략과 일치
+--   - PostgreSQL, MySQL 등 프로덕션 DB 마이그레이션 용이
+--   - 대소문자 혼용으로 인한 매핑 이슈 방지
+-- ========================================
+
+-- Examples 테이블 생성
+CREATE TABLE IF NOT EXISTS examples (
+    example_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- ========================================
+-- 외래키 정책
+-- ========================================
+-- 외래키 제약 조건(FOREIGN KEY) 사용 안함
+-- 다른 테이블 참조가 필요한 경우:
+--   - 제약 조건 없이 ID 컬럼만 추가 (예: USER_ID BIGINT)
+--   - 참조 무결성은 애플리케이션 레벨에서 관리
+--   - 장점: 유연한 데이터 관리, 순환 참조 방지, 테스트 용이성
+--
+-- 예시:
+-- ❌ 외래키 제약 사용 (사용하지 않음)
+-- CREATE TABLE ORDERS (
+--     ORDER_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+--     USER_ID BIGINT NOT NULL,
+--     FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)  -- 사용 안함
+-- );
+--
+-- ✅ ID만 포함 (권장)
+-- CREATE TABLE ORDERS (
+--     ORDER_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+--     USER_ID BIGINT NOT NULL,  -- 제약 조건 없이 ID만 저장
+--     CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- );
 ```
 
 #### 4-3. data.sql
@@ -60,10 +96,10 @@ CREATE TABLE IF NOT EXISTS EXAMPLES (
  */
 
 -- 초기 테스트 데이터
-INSERT INTO EXAMPLES (EXAMPLE_ID, NAME, CREATED_AT, UPDATED_AT) VALUES
-(1, 'First Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Second Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(3, 'Third Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO examples (name, created_at, updated_at) VALUES
+('First Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Second Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Third Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ```
 
 ### 5. Application-API 모듈 의존성 추가
@@ -98,5 +134,5 @@ searchkim/
 - **순수 리소스 모듈**: Java 코드 없이 SQL 스크립트만 포함
 - **Spring Boot 자동 실행**: application-api 실행시 schema.sql, data.sql 자동 실행
 - **H2 호환**: 개발환경에 최적화된 DDL/DML
-- **대문자 테이블명**: H2 데이터베이스 규약 준수
+- **소문자 테이블/컬럼명**: Spring Data JDBC 기본 네이밍과 일치, 프로덕션 DB 마이그레이션 용이
 - **완전한 DDL 분리**: 데이터베이스 스키마 관리의 독립성 보장

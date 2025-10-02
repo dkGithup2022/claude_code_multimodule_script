@@ -1,6 +1,6 @@
 spring:
   application:
-    name: modules-application-api
+    name: quick-multimodule-application-api
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -17,12 +17,20 @@ spring:
     init:
       mode: embedded
 
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
 server:
   port: 8080
 
 logging:
   level:
-    io.multi.hello: DEBUG
+    io.example.hello: DEBUG
     org.springframework.jdbc: DEBUG
 
 springdoc:

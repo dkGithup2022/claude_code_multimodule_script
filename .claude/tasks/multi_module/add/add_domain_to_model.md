@@ -73,6 +73,10 @@ public class ${도메인명} implements ${도메인명}Model {
     String description;
     Instant createdAt;
     Instant updatedAt;
+
+    public static ${도메인명} newOne(String name, String description) {
+        return new ${도메인명}(null, name, description, Instant.now(), Instant.now());
+    }
 }
 ```
 

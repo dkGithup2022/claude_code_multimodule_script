@@ -74,18 +74,20 @@ repository-jdbc 모듈에서 Entity 클래스를 찾을 수 없습니다.
 ```
 칼럼에 어노테이션이 있을 경우, 어노테이션의 규칙을 따름. 없다면 아래의 규칙으로 진행.
 
-Long/long → BIGINT
-Integer/int → INTEGER
-String → VARCHAR(255)
-String (name 필드) → VARCHAR(255) NOT NULL
-String (description 필드) → VARCHAR(500)
-String (email 필드) → VARCHAR(255) UNIQUE
-Boolean/boolean → BOOLEAN
-Instant → TIMESTAMP WITH TIME ZONE (UTC 저장)
-LocalDate → DATE
-BigDecimal → DECIMAL(19,2)
-Double/double → DOUBLE
-Float/float → REAL
+Long/long → bigint
+Integer/int → integer
+String → varchar(255)
+String (name 필드) → varchar(255) not null
+String (description 필드) → varchar(500)
+String (email 필드) → varchar(255) unique
+Boolean/boolean → boolean
+Instant → timestamp (UTC 저장)
+LocalDate → date
+BigDecimal → decimal(19,2)
+Double/double → double precision
+Float/float → real
+
+※ 모든 타입명과 키워드는 소문자 사용
 ```
 
 ### 5. 사용자 정의 컬럼 입력 (n 선택 시)
@@ -108,14 +110,14 @@ phone: VARCHAR(20)
 ### 7. 생성할 스키마 정보 확인 및 승인
 ```
 도메인명: ${입력받은도메인명}
-테이블명: ${도메인명대문자복수형} (예: USERS, PRODUCTS)
+테이블명: ${도메인명소문자복수형} (예: users, products)
 
 생성될 DDL:
 CREATE TABLE IF NOT EXISTS ${테이블명} (
-    ${도메인명대문자}_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ${도메인명소문자}_id bigint auto_increment primary key,
     ${사용자정의컬럼들}
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp
 );
 
 ${초기데이터가_있으면:}
@@ -125,6 +127,8 @@ INSERT INTO ${테이블명} (컬럼들...) VALUES (값들...);
 경로: ${루트모듈}/schema/src/main/resources/
 
 위 내용으로 진행하시겠습니까? (Y/n)
+
+※ 테이블명/컬럼명 규칙: 소문자 + 스네이크케이스 (Spring Data JDBC 네이밍 규칙)
 ```
 
 ### 8. 스키마 파일 업데이트 (사용자 승인 후)
@@ -133,11 +137,15 @@ INSERT INTO ${테이블명} (컬럼들...) VALUES (값들...);
 ```sql
 -- ${도메인명} 테이블 생성
 CREATE TABLE IF NOT EXISTS ${테이블명} (
-    ${도메인명대문자}_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ${도메인명소문자}_id bigint auto_increment primary key,
     ${정의된컬럼들}
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp
 );
+
+-- ※ 외래키 정책: 외래키 제약 조건(FOREIGN KEY) 사용 안함
+--   다른 테이블 참조 시 제약 조건 없이 ID 컬럼만 추가 (예: user_id bigint)
+--   참조 무결성은 애플리케이션 레벨에서 관리
 ```
 
 #### 8-2. data.sql 파일에 DML 추가 (선택사항)
@@ -203,16 +211,16 @@ ${생성된데이터행들};
      테이블명: FOOS
 
      생성될 DDL (Entity 구조 기반):
-     CREATE TABLE IF NOT EXISTS FOOS (
-         FOO_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-         NAME VARCHAR(255) NOT NULL,
-         DESCRIPTION VARCHAR(500),
-         CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-         UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+     CREATE TABLE IF NOT EXISTS foos (
+         foo_id bigint auto_increment primary key,
+         name varchar(255) not null,
+         description varchar(500),
+         created_at timestamp default current_timestamp,
+         updated_at timestamp default current_timestamp on update current_timestamp
      );
 
      생성될 DML:
-     INSERT INTO FOOS (NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) VALUES
+     INSERT INTO foos (name, description, created_at, updated_at) VALUES
      ('Foo One', 'First Foo', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
      ('Foo Two', 'Second Foo', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
      ('Foo Three', 'Third Foo', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -225,7 +233,7 @@ ${생성된데이터행들};
     [스키마 파일 업데이트 및 빌드 수행]
     "성공적으로 Foo 테이블이 스키마에 추가되었습니다!
      ✓ FooEntity.java에서 필드 구조 자동 추출
-     ✓ schema.sql에 FOOS 테이블 DDL 추가
+     ✓ schema.sql에 foos 테이블 DDL 추가 (소문자)
      ✓ data.sql에 초기 데이터 3개 레코드 추가"
 ```
 
@@ -282,21 +290,21 @@ ${생성된데이터행들};
  * Copyright 2024 searchkim Inc. - All Rights Reserved.
  */
 
--- Examples 테이블 생성 (H2용 - 대문자 테이블명 사용)
-CREATE TABLE IF NOT EXISTS EXAMPLES (
-    EXAMPLE_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-    NAME VARCHAR(255) NOT NULL,
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- Examples 테이블 생성
+CREATE TABLE IF NOT EXISTS examples (
+    example_id bigint auto_increment primary key,
+    name varchar(255) not null,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp
 );
 
 -- User 테이블 생성
-CREATE TABLE IF NOT EXISTS USERS (
-    USER_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-    NAME VARCHAR(255) NOT NULL,
-    DESCRIPTION VARCHAR(500),
-    CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS users (
+    user_id bigint auto_increment primary key,
+    name varchar(255) not null,
+    description varchar(500),
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp
 );
 ```
 
@@ -307,13 +315,13 @@ CREATE TABLE IF NOT EXISTS USERS (
  */
 
 -- 초기 테스트 데이터
-INSERT INTO EXAMPLES (EXAMPLE_ID, NAME, CREATED_AT, UPDATED_AT) VALUES
-(1, 'First Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(2, 'Second Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-(3, 'Third Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO examples (name, created_at, updated_at) VALUES
+('First Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Second Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Third Example', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- User 초기 테스트 데이터
-INSERT INTO USERS (NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) VALUES
+INSERT INTO users (name, description, created_at, updated_at) VALUES
 ('User One', 'First User', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('User Two', 'Second User', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('User Three', 'Third User', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -334,11 +342,11 @@ INSERT INTO USERS (NAME, DESCRIPTION, CREATED_AT, UPDATED_AT) VALUES
 
 ## 테이블 명명 규칙
 - 도메인명 → 테이블명 변환 예시:
-  - User → USERS
-  - Product → PRODUCTS
-  - OrderItem → ORDER_ITEMS
-- PK 컬럼: `${도메인명대문자}_ID`
-- 모든 테이블명/컬럼명은 대문자 사용 (H2 규약)
+  - User → users
+  - Product → products
+  - OrderItem → order_items
+- PK 컬럼: `${도메인명소문자}_id`
+- 모든 테이블명/컬럼명은 소문자 + 스네이크케이스 사용 (Spring Data JDBC 네이밍 규칙)
 
 ## 지원하는 H2 데이터 타입
 - `VARCHAR(size)` - 문자열
